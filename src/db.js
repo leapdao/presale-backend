@@ -62,6 +62,14 @@ export default class Db {
     return transform(data.Attributes);
   }
 
+  async getCodesByEmail(email) {
+    const data = await this.select({
+      SelectExpression: `select * from \`${this.tableName}\` where email =  "${email.toLowerCase()}"`,
+    });
+
+    return data.Items.map(transform);
+  }
+
   method(name, params) {
     return new Promise((resolve, reject) => {
       this.sdb[name](params, (err, result) => {

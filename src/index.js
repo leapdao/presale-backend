@@ -25,6 +25,17 @@ export default class Faucet {
       return { status: 'error', errors };
     }
 
+    const emailCodes = await this.db.getCodesByEmail(email);
+    this.logger.log('emailCodes', { extra: { emailCodes} });
+    if (emailCodes.length > 0) {
+      return {
+        status: 'error',
+        errors: {
+          email: 'You have already claimed promo code for this email',
+        }
+      };
+    }
+
     const dbCode = await this.db.getPromoCode(promoCode);
 
     if (!dbCode || dbCode.email) {
